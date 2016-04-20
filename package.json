@@ -4,6 +4,7 @@
   "description": "convert a BMP file into an xterm-256 ANSI block image",
   "author": "Robey Pointer <robeypointer@gmail.com>",
   "license": "Apache-2.0",
+  "repository": "https://github.com/robey/bmp2ansi.git",
   "main": "lib/",
   "engines": {
     "node": ">= 4.2.0"
