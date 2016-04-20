@@ -13,7 +13,7 @@ const SPACE = " ";
 const BLACK = 0;
 
 // percent intensity required before we'll bother to render a pixel (on black)
-const CUTOFF = 0.20;
+const CUTOFF = 0.1;
 
 export function main() {
   const argv = process.argv.slice(2);
