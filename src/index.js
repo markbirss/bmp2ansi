@@ -19,7 +19,7 @@ export function main() {
   const argv = process.argv.slice(2);
   if (argv.length == 0) {
     process.stderr.write("usage: bmp2ansi <filename.bmp>\n");
-    process.stderr.write("  writes ansi codes to stderr\n");
+    process.stderr.write("  writes ansi codes to stdout\n");
     process.exit(1);
   }
 
