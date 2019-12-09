@@ -1,16 +1,12 @@
-"use strict";
-
-import Framebuffer from "./framebuffer";
-import fs from "fs";
+import { Framebuffer } from "./framebuffer";
 
 const BMP_HEADER = [ 0x42, 0x4d ];
 const HEADER_SIZE = 14;
 
 // read a BMP file into a framebuffer
-export function readBmp(filename) {
-  const data = typeof filename == "string" ? fs.readFileSync(filename) : filename;
+export function readBmp(data: Buffer): Framebuffer {
   if (data[0] != BMP_HEADER[0] || data[1] != BMP_HEADER[1]) {
-    throw new Error(`Not a BMP file: ${filename}`);
+    throw new Error(`Not a BMP file`);
   }
 
   const dataOffset = data.readUInt32LE(10);
@@ -51,8 +47,8 @@ export function readBmp(filename) {
   return fb;
 }
 
-export function writeBmp(framebuffer) {
-  const header = new Buffer(70);
+export function writeBmp(framebuffer: Framebuffer): Buffer {
+  const header = Buffer.alloc(70);
   header.writeUInt8(BMP_HEADER[0], 0);
   header.writeUInt8(BMP_HEADER[1], 1);
   header.writeUInt32LE(0, 6);
@@ -62,7 +58,7 @@ export function writeBmp(framebuffer) {
   header.writeUInt32LE(framebuffer.height, 22);
   header.writeUInt16LE(1, 26);  // "color planes"
   header.writeUInt16LE(framebuffer.colorDepth, 28);
-  header.writeUInt32LE(3, 30);  // no compression
+  header.writeUInt32LE(0, 30);  // no compression
   header.writeUInt32LE(0, 34);  // no size hint
   header.writeUInt32LE(0, 38);  // pixels per meter?
   header.writeUInt32LE(0, 42);  // pixels per meter?
@@ -75,9 +71,9 @@ export function writeBmp(framebuffer) {
   header.writeUInt32LE(0x000000ff, 62);  // blue
   header.writeUInt32LE(0xff000000, 66);  // alpha
 
-  const rows = [];
+  const rows: Buffer[] = [];
   for (let y = 0; y < framebuffer.height; y++) {
-    const buffer = new Buffer(Math.ceil(framebuffer.colorDepth * framebuffer.width / 32) * 4);
+    const buffer = Buffer.alloc(Math.ceil(framebuffer.colorDepth * framebuffer.width / 32) * 4);
     buffer.fill(0);
     let offset = 0;
     for (let x = 0; x < framebuffer.width; x++) {

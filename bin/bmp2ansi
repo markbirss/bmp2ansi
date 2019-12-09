@@ -5,5 +5,5 @@
 const fs   = require('fs');
 const path = require('path');
 
-const lib = path.join(path.dirname(fs.realpathSync(__filename)), '../lib');
-require(lib).main();
+const lib = path.join(path.dirname(fs.realpathSync(__filename)), "../lib");
+require(lib + "/bmp2ansi").main();

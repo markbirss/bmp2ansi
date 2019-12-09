@@ -1,31 +1,30 @@
 {
   "name": "bmp2ansi",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "convert a BMP file into an xterm-256 ANSI block image",
   "author": "Robey Pointer <robeypointer@gmail.com>",
   "license": "Apache-2.0",
   "repository": "https://github.com/robey/bmp2ansi.git",
   "main": "lib/",
   "engines": {
-    "node": ">= 4.2.0"
+    "node": ">= 10.0.0"
   },
   "dependencies": {
-    "antsy": "^1.1.1",
-    "source-map-support": "*"
+    "antsy": "^2.0.0",
+    "source-map-support": "^0.5.16"
   },
   "devDependencies": {
-    "babel-cli": "^6.0.0",
-    "babel-preset-es2015-node4": "^1.0.0",
-    "eslint": "^1.4.28"
+    "@types/node": "^12.12.14",
+    "typescript": "^3.7.3"
   },
   "files": [
     "lib",
     "bin"
   ],
   "scripts": {
-    "build": "eslint src test/src && babel --source-maps --out-dir lib src",
+    "build": "tsc",
     "clean": "rm -rf lib",
     "distclean": "npm run clean && rm -rf node_modules",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   }
 }

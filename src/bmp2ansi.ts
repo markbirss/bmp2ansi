@@ -1,7 +1,7 @@
-"use strict";
-
+import * as fs from "fs";
 import { get_color } from "antsy";
 import { readBmp } from "./bmp";
+import { Framebuffer } from "./framebuffer";
 
 import "source-map-support/register";
 
@@ -24,13 +24,13 @@ export function main() {
   }
 
   argv.forEach(filename => {
-    const fb = readBmp(filename);
+    const fb = readBmp(fs.readFileSync(filename));
     fb.renderAlpha(BLACK);
     process.stdout.write(renderFramebuffer(fb, CUTOFF));
   });
 }
 
-function renderFramebuffer(fb, cutoff) {
+function renderFramebuffer(fb: Framebuffer, cutoff: number): string {
   let out = "";
   for (let y = 0; y < fb.height; y += 2) {
     out += renderRow(fb, y, cutoff) + "\n";
@@ -39,14 +39,14 @@ function renderFramebuffer(fb, cutoff) {
 }
 
 // two rows at a time, because of the block chars.
-function renderRow(fb, y, cutoff) {
+function renderRow(fb: Framebuffer, y: number, cutoff: number): string {
   let line = "";
   for (let x = 0; x < fb.width; x++) {
     const topIntensity = fb.getPixelAsGray(x, y) / 255;
     const bottomIntensity = fb.getPixelAsGray(x, y + 1) / 255;
 
     // don't display anything if both colors are too dim.
-    // otherwise, pick the brightest color to be the "block" forground.
+    // otherwise, pick the brightest color to be the "block" foreground.
     if (topIntensity <= cutoff && bottomIntensity <= cutoff) {
       line += ESC + "[0m" + SPACE;
     } else if (topIntensity >= bottomIntensity) {
@@ -59,15 +59,15 @@ function renderRow(fb, y, cutoff) {
   return line;
 }
 
-function fgColor(color) {
+function fgColor(color: number): string {
   return ansiColor(color, "38");
 }
 
-function bgColor(color) {
+function bgColor(color: number): string {
   return ansiColor(color, "48");
 }
 
-function ansiColor(color, prefix) {
+function ansiColor(color: number, prefix: string): string {
   let hex = (color & 0xffffff).toString(16);
   while (hex.length < 6) hex = "0" + hex;
   return ESC + "[" + prefix + ";5;" + get_color(hex) + "m";
